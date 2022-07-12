@@ -1,1 +1,1 @@
-# data-science-small-projects
+# Collection of data science projects
