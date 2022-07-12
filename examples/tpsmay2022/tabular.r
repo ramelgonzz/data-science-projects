@@ -13,7 +13,7 @@ alpha <- "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 f_27_names <- sapply(0:10, function(i) {paste0("l_", i)})
 
-features <- function(df, remove=T) {
+featurise <- function(df, remove=T) {
     df %>% 
         separate(f_27, sep="", into=f_27_names, remove=remove) %>%
         select(-l_0) %>%
@@ -23,7 +23,7 @@ features <- function(df, remove=T) {
         ungroup()
 }
 
-data_train <- features()(train, remove=T)
+data_train <- featurise()(train, remove=T)
 split <- data_train %>% initial_split(prop=4/5)
 data_train <- training(split)
 data_valid <- testing(split)

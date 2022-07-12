@@ -36,6 +36,8 @@ from keras.utils.vis_utils import plot_model
 train = pd.read_csv('train.csv')
 test = pd.read_csv('test.csv')
 
+
+#from https://www.kaggle.com/code/wti200/analysing-interactions-with-shap
 #%%
 #1.1 Perform eda on data
 #interaction vs. correlation
@@ -270,4 +272,4 @@ plot_feature_interaction(f1, f2)
 
 #####MODELING#####
 
-
+#from https://www.kaggle.com/code/cabaxiom/tps-may-22-eda-lgbm-model
