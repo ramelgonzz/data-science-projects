@@ -5,6 +5,8 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objs as go
 import plotly.express as px
+from xgboost import XGBClassifier
+import xgboost
 import matplotlib.pyplot as plt
 import seaborn as sns
 from plotly.offline import init_notebook_mode
@@ -132,8 +134,12 @@ X_train, X_valid, y_train, y_valid = train_test_split(
                                 test_size = test_size_pct, 
                                 random_state = 2022)
 # %%
+###############BUILD AND SCORE MODELS##################
+#We compare different scores for the higher accuracy
+#%%
+from sklearn.metrics import roc_auc_score
+#%%
 #xgboost
-from xgboost  import XGBClassifier
 
 params = {'n_estimators': 8192,
           'max_depth': 7,
@@ -154,4 +160,104 @@ xgb.fit(X_train, y_train,
         eval_metric = ['auc','logloss'], 
         early_stopping_rounds = 64, 
         verbose = 32)
+#%%
+#xgboost score
+preds = xgb.predict_proba(X_valid)[:, 1]
+score = roc_auc_score(y_valid, preds)
+print(score)
+
+# %%
+#lgbm
+import lightgbm
+from lightgbm import LGBMClassifier
+params = {'n_estimators': 8192,
+          'max_depth': 7,
+          'learning_rate': 0.1,
+          'subsample': 0.96,
+          'colsample_bytree': 0.80,
+          'reg_lambda': 1.50,
+          'reg_alpha': 6.10,
+          'gamma': 1.40,
+          'random_state': 16
+         }
+
+lgb=LGBMClassifier(**params)
+lgb.fit(X_train, y_train, 
+        eval_set = [(X_valid, y_valid)], 
+        eval_metric = ['auc','logloss'], 
+        early_stopping_rounds = 64, 
+        verbose = 32)
+#%%
+#lgbm score
+preds_lgb=lgb.predict_proba(X_valid)[:,1]
+score = roc_auc_score(y_valid, preds_lgb)
+print(score)
+# %%
+#ExtraTreesClassifier
+from sklearn.ensemble import ExtraTreesClassifier
+
+et=ExtraTreesClassifier()
+et.fit(X_train, y_train)
+#%%
+#ExtraTreesClassifier score
+preds_et=et.predict_proba(X_valid)[:,1]
+score = roc_auc_score(y_valid, preds_et)
+print(score)
+# %%
+#AdaBoost
+from sklearn.ensemble import AdaBoostClassifier
+
+ada=AdaBoostClassifier(n_estimators=1000)
+ada.fit(X_train, y_train)
+#%%
+#AdaBoost Score
+preds_ada=ada.predict_proba(X_valid)[:,1]
+score = roc_auc_score(y_valid, preds_ada)
+print(score)
+# %%
+#GradientBoosting
+from sklearn.ensemble import GradientBoostingClassifier
+gb=GradientBoostingClassifier()
+gb.fit(X_train, y_train)
+#%%
+#GradientBoosting Score
+preds_gb=gb.predict_proba(X_valid)[:,1]
+score = roc_auc_score(y_valid, preds_gb)
+print(score)
+# %%
+#Histogram of Feature Importance
+def plot_feature_importance(importance, names, model_type, max_features = 10):
+    #Create arrays from feature importance and feature names
+    feature_importance = np.array(importance)
+    feature_names = np.array(names)
+
+    #Create a DataFrame using a Dictionary
+    data={'feature_names':feature_names,'feature_importance':feature_importance}
+    fi_df = pd.DataFrame(data)
+
+    #Sort the DataFrame in order decreasing feature importance
+    fi_df.sort_values(by=['feature_importance'], ascending=False,inplace=True)
+    fi_df = fi_df.head(max_features)
+
+    #Define size of bar plot
+    plt.figure(figsize=(8,6))
+    
+    #Plot Searborn bar chart
+    sns.barplot(x=fi_df['feature_importance'], y=fi_df['feature_names'])
+    #Add chart labels
+    plt.title(model_type + 'FEATURE IMPORTANCE')
+    plt.xlabel('IMPORTANCE')
+    plt.ylabel('FEATURE NAMES')
+    
+# %%
+plot_feature_importance(xgb.feature_importances_,X_train.columns,'XGBOOST ', max_features = 15)
+# %%
+#Merging data [XGBoost]
+xgb_preds = xgb.predict_proba(test_merge_data[features])[:, 1]
+xgb_preds
+
+# %%
+#Merging data [LightGBM]
+lgb_preds=lgb.predict_proba(test_merge_data[features])[:, 1]
+lgb_preds
 # %%
