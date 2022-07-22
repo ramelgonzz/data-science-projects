@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# training data
+test_images/
+train_images/
+pytorch-image-models/
+wandb/
