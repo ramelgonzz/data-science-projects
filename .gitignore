@@ -133,3 +133,4 @@ test_images/
 train_images/
 pytorch-image-models/
 wandb/
+*.csv
