@@ -133,4 +133,8 @@ test_images/
 train_images/
 pytorch-image-models/
 wandb/
+roberta-base/
 *.csv
+*.txt
+*.json
+*.bin
