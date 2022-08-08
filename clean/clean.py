@@ -11,6 +11,9 @@ df.head()
 df.dropna(thresh=3) #remove rows containing less than 3 elements
 df.interpolate(method='linear', order=5) #Fill NaN values using linear interpolation
 df.head()
+# df.dropna(subset=['Date'], inplace = True) Remove rows with a NULL value in the "Date" column
+# x = df["First Column"].mean() Calculate the MEAN, and replace any empty values with it
+# df["First Column"].fillna(x, inplace = True) 
 #%%
 drop_features = ['First Column', 'Second Column', 'Third Column', 'Fourth Column', 'Fifth Column', 'Sixth Column', 'Seventh Column']
 df.drop(drop_features, inplace=True, axis=1)
