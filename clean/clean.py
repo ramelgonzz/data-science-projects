@@ -22,4 +22,8 @@ df['Seventh Column'] = pd.to_numeric(extr)
 df['Seventh Column'].dtype #convert to float
 df.to_csv('output.csv')
 
-#...
+df.drop_duplicates() #remove duplicate rows
+df["calories"].replace(-1, None, inplace=True) #replace invalid values with a another value
+df.rename(columns={"old_name": "new_name"}, inplace=True) #rename columns
+df.drop(["column_name"], axis=1, inplace=True) #remove columns
+df.to_csv('output2.csv') #save to second file
