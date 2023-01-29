@@ -27,3 +27,22 @@ df["calories"].replace(-1, None, inplace=True) #replace invalid values with a an
 df.rename(columns={"old_name": "new_name"}, inplace=True) #rename columns
 df.drop(["column_name"], axis=1, inplace=True) #remove columns
 df.to_csv('output2.csv') #save to second file
+
+#create 2 dataframes and combine them together
+df1 = pd.DataFrame({'A': ['A0', 'A1', 'A2', 'A3'],
+                   'B': ['B0', 'B1', 'B2', 'B3'],
+                   'C': ['C0', 'C1', 'C2', 'C3'],
+                   'D': ['D0', 'D1', 'D2', 'D3']},
+                  index=[0, 1, 2, 3])
+
+df2 = pd.DataFrame({'A': ['A4', 'A5', 'A6', 'A7'],
+                   'B': ['B4', 'B5', 'B6', 'B7'],
+                   'C': ['C4', 'C5', 'C6', 'C7'],
+                   'D': ['D4', 'D5', 'D2', 'D7']},
+                  index=[4, 5, 6, 7])
+
+# Use the concat() function to combine the dataframes along axis=0 (rows)
+result = pd.concat([df1, df2], axis=0)
+
+# Print the resulting dataframe
+print(result)
